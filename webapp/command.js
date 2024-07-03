@@ -1,4 +1,5 @@
 import { TodoItem, TodoList } from "./classes.js";
+import { TodoHistory } from "./memento.js";
 
 export class Command {
   name;
@@ -13,6 +14,7 @@ export class Command {
 export const Commands = {
   ADD: "add",
   DELETE: "delete",
+  UNDO: "undo",
 };
 
 export const CommandExecutor = {
@@ -20,7 +22,7 @@ export const CommandExecutor = {
     const todoList = TodoList.getInstance();
     switch (command.name) {
       case Commands.ADD:
-        console.log('adding')
+        console.log("adding");
         const todoInput = globalThis.DOM.todoInput;
         const todoText = todoInput.value.trim();
         const itemToAdd = todoList.find(todoText);
@@ -30,9 +32,15 @@ export const CommandExecutor = {
         }
         break;
       case Commands.DELETE:
-        console.log('deleting')
+        console.log("deleting");
         const [textToDelete] = command.args;
         todoList.delete(textToDelete);
+        break;
+      case Commands.UNDO:
+        const previousList = TodoHistory.pop();
+        if (previousList) {
+          todoList.replaceList(previousList);
+        }
         break;
     }
   },

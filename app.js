@@ -50,4 +50,9 @@ document.addEventListener('keydown', (event) => {
       const cmd = new Command(Commands.ADD);
       CommandExecutor.execute(cmd);
     }
+
+    if(event.ctrlKey && event.key === 'z' ){
+      const cmd = new Command(Commands.UNDO);
+      CommandExecutor.execute(cmd);
+    }
 })
